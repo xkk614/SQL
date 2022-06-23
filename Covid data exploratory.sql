@@ -4,8 +4,6 @@ Where continent is not null
 order by 3,4
 
 
--- Select Data that we are going to be starting with
-
 Select Location, date, total_cases, new_cases, total_deaths, population
 From CovidDeath
 Where continent is not null 
@@ -38,8 +36,7 @@ Group by Location, Population
 order by PercentPopulationInfected desc
 
 
--- Countries with Highest Death Count per Population
-
+-- Countries with Highest Death Count
 Select Location, MAX(cast(Total_deaths as int)) as TotalDeathCount
 From CovidDeath
 --Where location = 'United States'
@@ -58,6 +55,7 @@ Group by continent
 order by TotalDeathCount desc
 
 -- Death rate by contient
+
 Select continent, date, total_cases,total_deaths, (total_deaths/total_cases)*100 as DeathPercentage
 From CovidDeath
 --Where location = 'United States'
@@ -65,12 +63,14 @@ Where continent is not null
 order by DeathPercentage DESC
 
 --% popoulation infected contient over time
+
 Select continent, date, Population, total_cases,  (total_cases/population)*100 as PercentPopulationInfected
 From CovidDeath
 where continent is not null
 order by 1,2
 
 -- total % people infected by continent
+
 Select continent, Population, MAX(total_cases) as HighestInfectionCount,  Max((total_cases/population))*100 as PercentPopulationInfected
 From CovidDeath
 --Where location = 'United States'
