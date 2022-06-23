@@ -13,7 +13,6 @@ order by 1,2
 
 
 -- Total Cases vs Total Deaths
--- Death rate of a country
 
 Select Location, date, total_cases,total_deaths, (total_deaths/total_cases)*100 as DeathPercentage
 From CovidDeath
@@ -23,7 +22,6 @@ order by 1,2
 
 
 -- Total Cases vs Population
--- Shows what percentage of population infected with Covid
 
 Select Location, date, Population, total_cases,  (total_cases/population)*100 as PercentPopulationInfected
 From CovidDeath
@@ -31,7 +29,7 @@ From CovidDeath
 order by 1,2
 
 
--- Countries with Highest Infection Rate compared to Population
+-- Countries with Highest Infection Rate
 
 Select Location, Population, MAX(total_cases) as HighestInfectionCount,  Max((total_cases/population))*100 as PercentPopulationInfected
 From CovidDeath
@@ -50,9 +48,7 @@ Group by Location
 order by TotalDeathCount desc
 
 
--- BREAKING THINGS DOWN BY CONTINENT
-
--- Showing contintents with the highest death count per population
+-- Showing contintents with the highest death count
 
 Select continent, MAX(cast(Total_deaths as int)) as TotalDeathCount
 From CovidDeath
@@ -94,7 +90,6 @@ order by 1,2
 
 
 -- Total Population vs Vaccinations
--- Shows Percentage of Population that has recieved at least one Covid Vaccine
 
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(CONVERT(bigint,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
@@ -157,7 +152,7 @@ From #PercentPopulationVaccinated
 
 
 
--- Creating View to store data for later visualizations
+-- Creating View to store data
 Create View PercentPopulationVaccinated as
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
