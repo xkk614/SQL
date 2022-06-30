@@ -152,7 +152,7 @@ From #PercentPopulationVaccinated
 
 
 
--- Creating View to store data
+-- Creating Views
 Create View PercentPopulationVaccinated as
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
@@ -162,3 +162,21 @@ Join CovidVaccincation as vac
 	On dea.location = vac.location
 	and dea.date = vac.date
 where dea.continent is not null 
+
+Create view PercentagePopluationInfectedByCountry as
+Select Location, date, Population, total_cases,  (total_cases/population)*100 as PercentPopulationInfected
+From CovidDeath
+
+
+Create View TotalDeathByContinent as
+Select continent, MAX(cast(Total_deaths as int)) as TotalDeathCount
+From CovidDeath
+--Where location = 'United States'
+Where continent is not null 
+Group by continent
+
+Create View GlobalTotal as
+Select SUM(new_cases) as total_cases, SUM(cast(new_deaths as int)) as total_deaths, SUM(cast(new_deaths as int))/SUM(New_Cases)*100 as DeathPercentage
+From CovidDeath
+where continent is not null 
+
